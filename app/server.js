@@ -9,8 +9,8 @@ const sale_amount_use_case_1 = require("./domain/use-case/sale-amount.use-case")
 const sales_amount_memory_repository_1 = require("./infraestructura/repository/sales-amount.memory.repository");
 const port = 4000;
 const app = (0, express_1.default)();
-app.get('/sales-amount', (req, res) => {
-    new sale_amount_route_1.SaleAmountRoute(new sale_amount_use_case_1.SaleAmountUseCase(new sales_amount_memory_repository_1.SalesAmountMemoryRepository())).handle(req, res);
+app.get('/sales-amount', (req, res, next) => {
+    new sale_amount_route_1.SaleAmountRoute(new sale_amount_use_case_1.SaleAmountUseCase(new sales_amount_memory_repository_1.SalesAmountMemoryRepository())).handle(req, res, next);
 });
 app.listen(port, () => {
     console.log('server running at port %d', port);

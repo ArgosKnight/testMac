@@ -8,8 +8,8 @@ const app = express()
 
 
 
-app.get('/sales-amount', (req,res)=>{
-    new SaleAmountRoute(new SaleAmountUseCase(new SalesAmountMemoryRepository())).handle(req,res)
+app.get('/sales-amount', (req,res, next)=>{
+    new SaleAmountRoute(new SaleAmountUseCase(new SalesAmountMemoryRepository())).handle(req,res,next)
 })
 
 
