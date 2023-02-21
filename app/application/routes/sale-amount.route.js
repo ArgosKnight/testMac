@@ -13,9 +13,10 @@ class SaleAmountRoute {
         })
             //agregar funcion para recibir el error 
             //handle errors with the middleware  
-            .catch(next => {
-            next = res.json("Numero es igual a 1, actualizar pagina");
-            return next;
+            .catch((err) => {
+            // console.log('dentro del route',err.message)
+            // Invocamos nuevo Middleware
+            next(err);
         });
     }
 }
