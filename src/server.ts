@@ -38,6 +38,9 @@ app.get('/sinCpes', (req,res,next)=>{
     new SinCpesRoute(new SinCpesUseCase(new SinCpesMemoryRepository())).handle(req,res, next)
 })
 
+
+
+//MIDDLEWARE DE ERRORES
 app.use((error: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.log("Error HANDLE called")
     console.log('Path: ', req.path)
@@ -45,14 +48,9 @@ app.use((error: Error, req: express.Request, res: express.Response, next: expres
 
     res.status(500).json(error.message)
 })
-
-//MIDDLEWARE DE ERRORES
-
 app.get('/error', (req, res) => {
     res.send('Custom error lagging page, reset')
 })
-
-
 
 
 

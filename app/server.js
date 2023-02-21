@@ -38,13 +38,13 @@ app.get('/factu-tot', (req, res, next) => {
 app.get('/sinCpes', (req, res, next) => {
     new sincpes_amount_1.SinCpesRoute(new sincpes_use_case_1.SinCpesUseCase(new sincpes_memory_repository_1.SinCpesMemoryRepository())).handle(req, res, next);
 });
+//MIDDLEWARE DE ERRORES
 app.use((error, req, res, next) => {
     console.log("Error HANDLE called");
     console.log('Path: ', req.path);
     console.error('detro del middleware Error: ', error);
     res.status(500).json(error.message);
 });
-//MIDDLEWARE DE ERRORES
 app.get('/error', (req, res) => {
     res.send('Custom error lagging page, reset');
 });
