@@ -15,17 +15,17 @@ const sale_amount_use_case_1 = require("./domain/use-case/sale-amount.use-case")
 const sale_tot_use_case_1 = require("./domain/use-case/sale-tot.use-case");
 const sincpes_use_case_1 = require("./domain/use-case/sincpes.use-case");
 const facturation_amount_memory_repository_1 = require("./infraestructura/repository/facturation-amount.memory.repository");
-const sales_amount_mongodb_repository_1 = require("./infraestructura/repository/sales-amount.mongodb.repository");
+const sales_amount_memory_repository_1 = require("./infraestructura/repository/sales-amount.memory.repository");
 const sincpes_memory_repository_1 = require("./infraestructura/repository/sincpes.memory.repository");
 const port = 4000;
 const app = (0, express_1.default)();
 //Rutas 
 //Sales
 app.get('/sales-amount', (req, res, next) => {
-    let x = new sale_amount_route_1.SaleAmountRoute(new sale_amount_use_case_1.SaleAmountUseCase(new sales_amount_mongodb_repository_1.SalesAmountMongoDbRepository())).handle(req, res, next);
+    let x = new sale_amount_route_1.SaleAmountRoute(new sale_amount_use_case_1.SaleAmountUseCase(new sales_amount_memory_repository_1.SalesAmountMemoryRepository())).handle(req, res, next);
 });
 app.get('/sales-tot', (req, res, next) => {
-    new sale_tot_route_1.SaleTotalRoute(new sale_tot_use_case_1.SaleTotUseCase(new sales_amount_mongodb_repository_1.SaleTotMongoRepository())).handle(req, res, next);
+    new sale_tot_route_1.SaleTotalRoute(new sale_tot_use_case_1.SaleTotUseCase(new sales_amount_memory_repository_1.SaleTotMemoryRepository())).handle(req, res, next);
 });
 //Facturation
 app.get('/factu-amount', (req, res, next) => {

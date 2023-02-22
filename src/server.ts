@@ -11,6 +11,7 @@ import { SaleTotUseCase } from "./domain/use-case/sale-tot.use-case"
 import { SinCpesUseCase } from "./domain/use-case/sincpes.use-case"
 import { FactuAmountMemoryRepository, FactuTotMemoryRepository } from "./infraestructura/repository/facturation-amount.memory.repository"
 import { SalesAmountMemoryRepository, SaleTotMemoryRepository } from "./infraestructura/repository/sales-amount.memory.repository"
+import { SalesAmountMongoDbRepository, SaleTotMongoRepository } from "./infraestructura/repository/sales-amount.mongodb.repository"
 import { SinCpesMemoryRepository } from "./infraestructura/repository/sincpes.memory.repository"
 
 const port = 4000
@@ -19,10 +20,10 @@ const app = express()
 //Rutas 
 //Sales
 app.get('/sales-amount', (req, res, next) => {
-    let x = new SaleAmountRoute(new SaleAmountUseCase(new SalesAmountMemoryRepository())).handle(req, res, next)
+    let x = new SaleAmountRoute(new SaleAmountUseCase(new SalesAmountMongoDbRepository())).handle(req, res, next)
 })
 app.get('/sales-tot', (req, res, next)=>{
-    new SaleTotalRoute(new SaleTotUseCase(new SaleTotMemoryRepository())).handle(req,res,next)
+    new SaleTotalRoute(new SaleTotUseCase(new SaleTotMongoRepository())).handle(req,res,next)
 })
 
 //Facturation
