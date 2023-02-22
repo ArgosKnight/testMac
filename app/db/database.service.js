@@ -8,15 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const { MongoClient } = require("mongodb");
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongodb_1 = require("mongodb");
 // Replace the following with your Atlas connection string                                                                                                                                        
-const url = "mongodb+srv://test.p3fkywo.mongodb.net/myFirstDatabas";
-const client = new MongoClient(url);
+const url = "mongodb+srv://argos:skatelife1995@test.p3fkywo.mongodb.net/myFirstDatabase";
+const client = new mongodb_1.MongoClient(url);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield client.connect();
             console.log("Connected correctly to server");
+            client.db();
         }
         catch (err) {
             console.error(err);

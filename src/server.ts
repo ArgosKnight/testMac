@@ -1,4 +1,5 @@
 import express from "express"
+import { MongoClient } from "mongodb"
 import { FactuAmountRoute } from "./application/routes/facturation-amount.route"
 import { FactuTotRoute } from "./application/routes/facturation-tot.route"
 import { SaleAmountRoute } from "./application/routes/sale-amount.route"
@@ -11,50 +12,58 @@ import { SaleTotUseCase } from "./domain/use-case/sale-tot.use-case"
 import { SinCpesUseCase } from "./domain/use-case/sincpes.use-case"
 import { FactuAmountMemoryRepository, FactuTotMemoryRepository } from "./infraestructura/repository/facturation-amount.memory.repository"
 import { SalesAmountMemoryRepository, SaleTotMemoryRepository } from "./infraestructura/repository/sales-amount.memory.repository"
-import { SalesAmountMongoDbRepository, SaleTotMongoRepository } from "./infraestructura/repository/sales-amount.mongodb.repository"
+import { SalesAmountMongoDbRepository } from "./infraestructura/repository/sales-amount.mongodb.repository"
 import { SinCpesMemoryRepository } from "./infraestructura/repository/sincpes.memory.repository"
 
 const port = 4000
 const app = express()
 
-//Rutas 
-//Sales
-app.get('/sales-amount', (req, res, next) => {
-    let x = new SaleAmountRoute(new SaleAmountUseCase(new SalesAmountMongoDbRepository())).handle(req, res, next)
+const client = new MongoClient("mongodb+srv://argos:skatelife1995@test.p3fkywo.mongodb.net/?retryWrites=true&w=majority")
+
+
+client.connect().then(() => {
+    const db = client.db('myFirstDatabase')
+
+    //Rutas 
+    //Sales
+    app.get('/sales-amount', (req, res, next) => {
+        let x = new SaleAmountRoute(new SaleAmountUseCase(new SalesAmountMongoDbRepository(db))).handle(req, res, next)
+    })
+    app.get('/sales-tot', (req, res, next) => {
+        new SaleTotalRoute(new SaleTotUseCase(new SaleTotMemoryRepository())).handle(req, res, next)
+    })
+
+    //Facturation
+    app.get('/factu-amount', (req, res, next) => {
+        new FactuAmountRoute(new FactuAmountUseCase(new FactuAmountMemoryRepository())).handle(req, res, next)
+    })
+    app.get('/factu-tot', (req, res, next) => {
+        new FactuTotRoute(new FactuTotUseCase(new FactuTotMemoryRepository())).handle(req, res, next)
+    })
+
+    //SinCpes
+    app.get('/sinCpes', (req, res, next) => {
+        new SinCpesRoute(new SinCpesUseCase(new SinCpesMemoryRepository())).handle(req, res, next)
+    })
+
+
+
+    //MIDDLEWARE DE ERRORES
+    app.use((error: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+        console.log("Error HANDLE called")
+        console.log('Path: ', req.path)
+        console.error('detro del middleware Error: ', error)
+
+        res.status(500).json(error.message)
+    })
+    app.get('/error', (req, res) => {
+        res.send('Custom error lagging page, reset')
+    })
+
+
+
+    app.listen(port, () => {
+        console.log('server running at port %d', port)
+    })
 })
-app.get('/sales-tot', (req, res, next)=>{
-    new SaleTotalRoute(new SaleTotUseCase(new SaleTotMongoRepository())).handle(req,res,next)
-})
 
-//Facturation
-app.get('/factu-amount', (req,res, next)=>{
-    new FactuAmountRoute(new FactuAmountUseCase(new FactuAmountMemoryRepository())).handle(req,res,next)
-})
-app.get('/factu-tot', (req, res, next)=>{
-    new FactuTotRoute(new FactuTotUseCase(new FactuTotMemoryRepository())).handle(req, res, next)
-})
-
-//SinCpes
-app.get('/sinCpes', (req,res,next)=>{
-    new SinCpesRoute(new SinCpesUseCase(new SinCpesMemoryRepository())).handle(req,res, next)
-})
-
-
-
-//MIDDLEWARE DE ERRORES
-app.use((error: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.log("Error HANDLE called")
-    console.log('Path: ', req.path)
-    console.error('detro del middleware Error: ', error)
-
-    res.status(500).json(error.message)
-})
-app.get('/error', (req, res) => {
-    res.send('Custom error lagging page, reset')
-})
-
-
-
-app.listen(port, () => {
-    console.log('server running at port %d', port)
-})
